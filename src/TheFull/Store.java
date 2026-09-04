@@ -50,38 +50,31 @@ public class Store {
 			System.out.println("thier is no product add to the store yet");
 			return;
 		}
-		for(Product p : products.values()) {
-			System.out.println(p);
-		}
+		products.values().forEach(System.out::println);
+	
 	}
 	public void SearchProductByID(int product_id) {
-		if(products.isEmpty()) {
-			System.out.println("thier is no product add to the store yet");
-			return;
-		}
-		if(!products.containsKey(product_id)) {
-			System.out.println("the proeduct not found pleas check id id");
-			return;
-		}else {
-			System.out.println(products.get(product_id));
-		}
+		
+		Optional.ofNullable(products.get(product_id))
+		.ifPresentOrElse( System.out::println,
+                () -> System.out.println(products.isEmpty() 
+                        ? "there is no product added to the store yet." 
+                        : "the product not found, please check the ID."));
+		
+		
 	}
 	public void ShowAllCategories() {
-		for(String str : categorys) {
-			System.out.println(str);
-		}
+		
+		categorys.forEach(System.out ::println);
 	}
 	public void DisplayProductsOrderedByPrice() {
 		if(products.isEmpty()) {
 			System.out.println("thier is no product add to the store yet");
 			return;
 		}
-		List<Product> sorted_products = new ArrayList<>(products.values());
-		Collections.sort(sorted_products);
-		for(Product p : sorted_products) {
-			System.out.println(p);
-		}
-		
+		products.values().stream()
+		.sorted(Comparator.comparing(Product :: getPrices))
+		.forEach(System.out::println);
 		
 	}
 	public void createOrder(int order_id,String customar_name  ) {
@@ -202,10 +195,9 @@ public class Store {
 		reviews.add(review);
 	}
 	public void ShowAllReviewsForAProduct(int product_id) {
-		for(Review review : reviews) {
-			if(review.getProduct_id() == product_id)
-			System.out.println(review);
-		}
+		reviews.stream()
+		.filter(r -> r.getProduct_id() == product_id)
+		.forEach(System.out::println);
 		
 	}
 	public void RemoveOutOfStockProducts() {
@@ -221,11 +213,9 @@ public class Store {
 		
 	}
 	public void DisplayOrdersOrderedByTotal() {
-		List<Order> total_sordet_products = new ArrayList<>(orders.values());
-		total_sordet_products.sort(Comparator.comparing(Order :: getTotal));
-		for(Order order : total_sordet_products) {
-			System.out.println(order);
-		}
+		orders.values().stream()
+		.sorted(Comparator.comparing(Order :: getTotal))
+		.forEach(System.out::println);
 
 	}
 	
